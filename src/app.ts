@@ -4,6 +4,7 @@ import { config } from './config/config'
 import globalErrorHandler from './middlewares/globalErrorHandler'
 import userRouter from './user/userRoutes'
 
+
 const app = express()
 
 
@@ -14,6 +15,8 @@ const app = express()
       res.json({message: "Welcome to elib apis" })
 
   })
+
+  app.use(express.json())
 
   app.use( '/api/users',userRouter)
 
