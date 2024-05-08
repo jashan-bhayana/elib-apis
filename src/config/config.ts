@@ -7,6 +7,7 @@ const _config = {          // _ is used for private variable
     port: process.env.PORT,
     databaseURL : process.env.MONGO_URL,
     env: process.env.NODE_ENV,
+    JWT : process.env.JWT_SECRET,
 
 }               
 
