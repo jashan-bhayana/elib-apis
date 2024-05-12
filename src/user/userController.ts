@@ -40,7 +40,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       name,
       email,
       password: hashedPassword,
-    });
+    });                                    //hashedpassword stores hashed password in databse so that it can not be guessed
   } catch (err) {
     return next(createHttpError(500, "Error while creating user"));
   }
@@ -83,7 +83,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
   
   //If user is authenticated so Create access token
-  const token = sign({sub :user._id} , config.JWT as string , {
+  const token = sign({sub :user._id} , config.JWT as string , {   //sub:id of user
     
     expiresIn: '7d',
     algorithm: 'HS256'
