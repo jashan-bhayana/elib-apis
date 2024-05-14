@@ -5,7 +5,7 @@ import { createBook } from "./bookController";
 
 const upload = multer({
   dest: path.resolve(__dirname, "../../public/data/uploads"), // .. means 1 folder back,multer will create folder by itself
-  limits: { fileSize: 1 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
 });
 
 const bookRouter = express.Router();
