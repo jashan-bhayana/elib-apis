@@ -4,6 +4,7 @@ import path from "node:path";
 import fs from 'node:fs'
 import createHttpError from "http-errors";
 import bookModel from "./bookModel";
+import { AuthRequest } from "../middlewares/authenticate";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   const {title , genre} = req.body;
@@ -35,12 +36,12 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
         format: fileMimeType,
     });
 
-    console.log("upload result 2" , uploadResult2);
+   const _req = req as AuthRequest
     
     const newBook = await bookModel.create({
         title ,
         genre  ,
-        author : "663b206755b827015a192f58",  //author id from MongoDb compass
+        author : _req.userId,  //author id from MongoDb compass
         coverImage : uploadResult.secure_url,
         file : uploadResult2.secure_url
     });
