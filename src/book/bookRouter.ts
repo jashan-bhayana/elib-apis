@@ -1,7 +1,7 @@
 const express = require("express");
 import path from "node:path";
 import multer from "multer";
-import { createBook } from "./bookController";
+import { createBook, updateBook } from "./bookController";
 import authenticate from "../middlewares/authenticate";
 
 const upload = multer({
@@ -20,5 +20,15 @@ bookRouter.post(
   ]),
   createBook
 ); //  () => {} : middleware , here upload is created as middleware with the help of multer
+
+bookRouter.put(
+  "/:bookId",             //dynamic routing is done by ':'
+  authenticate ,
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ]),
+  updateBook
+);
 
 export default bookRouter;
