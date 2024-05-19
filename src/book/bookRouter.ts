@@ -1,7 +1,7 @@
 const express = require("express");
 import path from "node:path";
 import multer from "multer";
-import { createBook, updateBook } from "./bookController";
+import { createBook, listBooks, updateBook } from "./bookController";
 import authenticate from "../middlewares/authenticate";
 
 const upload = multer({
@@ -31,4 +31,8 @@ bookRouter.put(
   updateBook
 );
 
+bookRouter.get(
+  '/',                    //we will not authenticate it so that everyone can see the list
+  listBooks
+)
 export default bookRouter;
