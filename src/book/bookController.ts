@@ -83,6 +83,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Check if the user is authorized to update the book
+    //check access
     const _req = req as AuthRequest;
     if (book.author.toString() !== _req.userId) {
       return next(createHttpError(403, "Unauthorized to update the book"));
@@ -176,4 +177,45 @@ const getSingleBook = async (
     return next(createHttpError(500, "Error while getting a book"));
   }
 };
-export { createBook, updateBook, listBooks, getSingleBook };
+
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+  const bookId = req.params.bookId;
+
+  const book = await bookModel.findOne({ _id: bookId });
+
+  if (!book) {
+    return next(createHttpError(404, "Book not found"));
+  }
+
+  //check access
+  const _req = req as AuthRequest;
+  if (book.author.toString() !== _req.userId) {
+    return next(createHttpError(403, "Unauthorized to update the book"));
+  }
+  //book-covers/keubngdokaxihucvgme5 :- public id
+  //https://res.cloudinary.com/dtgwet6v5/image/upload/v1715760346/book-covers/xeabghwbab6sapfombvu.jpg
+
+  const coverFileSplit = book.coverImage.split("/");
+  const coverImagePublicId =
+    coverFileSplit.at(-2) /*-2 means book-covers*/ +
+    "/" +
+    coverFileSplit.at(-1)?.split(".").at(-2); //here -2 is accessed from this 'xeabghwbab6sapfombvu.jpg'
+  console.log("coverImagePublicId:", coverImagePublicId);
+
+  const bookFileSplit = book.file.split("/");
+  const bookFilePublicId = bookFileSplit.at(-2) + "/" + bookFileSplit.at(-1);
+  console.log("bookFilePublicId", bookFilePublicId);
+  try {
+    await cloudinary.uploader.destroy(coverImagePublicId); //to delete items from cloudinary
+    await cloudinary.uploader.destroy(bookFilePublicId, {
+      resource_type: "raw",
+    });
+    await bookModel.deleteOne({ _id: bookId });
+
+    return res.json("Book deleted successfully")
+    // return res.sendStatus(204); //204 empty content
+  } catch (error) {
+    return next(createHttpError(500, "Can not Delete book"));
+  }
+};
+export { createBook, updateBook, listBooks, getSingleBook, deleteBook };

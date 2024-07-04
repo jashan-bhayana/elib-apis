@@ -1,7 +1,7 @@
 const express = require("express");
 import path from "node:path";
 import multer from "multer";
-import { createBook, getSingleBook, listBooks, updateBook } from "./bookController";
+import { createBook, deleteBook, getSingleBook, listBooks, updateBook } from "./bookController";
 import authenticate from "../middlewares/authenticate";
 
 const upload = multer({
@@ -37,4 +37,10 @@ bookRouter.get(
 )
 
 bookRouter.get('/:bookId' , getSingleBook)
+
+bookRouter.delete(
+  '/:bookId',
+  authenticate,     //only authenticate user can delete the book
+  deleteBook
+)
 export default bookRouter;

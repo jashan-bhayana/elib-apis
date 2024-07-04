@@ -47,7 +47,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const token = sign({ sub: newUser._id }, config.JWT as string, {
-      expiresIn: "7d",
+      expiresIn: "10d",
     });
 
     //Response
